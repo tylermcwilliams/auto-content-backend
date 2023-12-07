@@ -1,0 +1,11 @@
+# Setup
+- Setup Openai
+    - generate openai api key
+    - put it in .env
+- Setup Youtube
+    - make google account
+    - make youtube channel
+    - generate google app
+    - generate youtube data api key
+    - put it client_secret_1
+- Enjoy

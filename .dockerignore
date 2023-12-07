@@ -1,0 +1,5 @@
+node_modules
+.env
+out
+credentials
+yt_api.json

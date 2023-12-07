@@ -1,0 +1,16 @@
+{
+  "reels": {
+    "top3": {
+      "descriptor": "3 disturbing enumerated facts (Number 1, Number 2, etc), very serious, dry, and realistic creepy pasta, enumerated list",
+      "lang": "english"
+    },
+    "naples": {
+      "descriptor": "A very weird and nonsensical story written in the style of a children's book mixed with modern day criminal napolitan, with a very serious and dry tone. Contains references to smoking cigarettes and riding mopeds without a helmet",
+      "lang": "italian"
+    },
+    "youbait": {
+      "descriptor": "Very shocking, exxagerated urban legend story, with a very serious and dry tone. Very click bait and makes use of the word you a lot",
+      "lang": "english"
+    }
+  }
+}
