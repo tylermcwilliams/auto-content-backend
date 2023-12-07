@@ -11,7 +11,7 @@ const {
   getTempPath,
 } = require("../../utils");
 
-const fontPath = "/usr/share/fonts/truetype/malayalam/Dyuthi-Regular.ttf";
+const fontPath = path.join(__dirname, "assets/fonts/Dyuthi-Regular.ttf");
 
 const createVisualVideo = async (
   index,
