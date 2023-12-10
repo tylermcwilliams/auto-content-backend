@@ -1,6 +1,9 @@
 const { gen_reel } = require("../services/mediaGeneration");
 const { upload_to_youtube } = require("../services/socialMedia");
-const { produceVideo } = require("../services/videoProduction");
+const {
+  produceVideo,
+  generateThumbnail,
+} = require("../services/videoProduction");
 const { reels: reel_templates } = require("../../templates");
 const fs = require("fs");
 const path = require("path");
@@ -11,13 +14,29 @@ const { getMediaDir } = require("../utils/fileSystem");
 
 const DATA_FOLDER = getMediaDir(); // adjust this path to your data folder
 
+const getVideoThumbnail = async (req, res) => {
+  console.info(req.params.id);
+  try {
+    const dir = req.params.id;
+    const pathToThumbnail = path.join(DATA_FOLDER, dir, "thumbnail.jpg");
+
+    if (!fs.existsSync(pathToThumbnail)) {
+      await generateThumbnail(dir);
+    }
+
+    res.sendFile(pathToThumbnail);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 const getVideo = async (req, res) => {
+  console.info("in route for", req.params.id);
   try {
     console.info(req.params.id);
     const dir = req.params.id;
     // Set the path to your MP4 file
-    const video = path.join(DATA_FOLDER, dir, "output.mp4");
-    const pathToMp4 = path.join(__dirname, "your-video.mp4");
+    const pathToMp4 = path.join(DATA_FOLDER, dir, "output.mp4");
 
     // Send the file
     res.sendFile(pathToMp4);
@@ -50,16 +69,19 @@ const listVideos = async (req, res) => {
 };
 
 const generateVideo = async (req, res) => {
+  console.info("in route", req.body);
   try {
     const { templateName, subject } = req.body;
+    console.info(templateName);
     const template = reel_templates[templateName || "top3"];
     if (!template) {
       return res.status(404).send("Template not found");
     }
     const strat = { subject, ...template };
-    await gen_reel(strat);
-    res.send("Video generation initiated.");
+    const videoData = await gen_reel(strat);
+    res.json(videoData);
   } catch (error) {
+    console.error(error);
     res.status(500).send(error.message);
   }
 };
@@ -85,6 +107,7 @@ const uploadVideo = async (req, res) => {
 };
 
 module.exports = {
+  getVideoThumbnail,
   getVideo,
   listVideos,
   generateVideo,

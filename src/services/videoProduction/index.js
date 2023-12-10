@@ -1,5 +1,6 @@
-const { produceVideo } = require("./ffmpegService");
+const { produceVideo, generateThumbnail } = require("./ffmpegService");
 
 module.exports = {
+  generateThumbnail,
   produceVideo,
 };

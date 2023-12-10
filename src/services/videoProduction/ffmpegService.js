@@ -117,6 +117,15 @@ const createVideoFromImages = async (
   }
 };
 
+async function generateThumbnail(id) {
+  const video_path = path.join(getMediaPath(id), `output.mp4`);
+  const thumbnail_path = path.join(getMediaPath(id), `thumbnail.jpg`);
+
+  await execAsync(
+    `ffmpeg -i "${video_path}" -ss 00:00:01.000 -vframes 1 "${thumbnail_path}"`
+  );
+}
+
 async function produceVideo(id) {
   const metadata_path = path.join(getMediaPath(id), `metadata.json`);
 
@@ -133,9 +142,12 @@ async function produceVideo(id) {
     video_path,
     temp_path
   );
+
+  await generateThumbnail(id);
 }
 
 module.exports = {
+  generateThumbnail,
   createVideoFromImages,
   produceVideo,
 };

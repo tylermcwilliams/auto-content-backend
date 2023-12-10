@@ -42,6 +42,11 @@ async function gen_reel(strat) {
   await produceVideo(id);
   // UPLOAD
   await upload_to_youtube(id);
+
+  return {
+    id,
+    data,
+  };
 }
 
 async function prep_text(id, idea, descriptor, lang) {
