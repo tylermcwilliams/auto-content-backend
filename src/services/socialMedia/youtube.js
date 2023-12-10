@@ -3,14 +3,14 @@ var readline = require("readline");
 var { google } = require("googleapis");
 var OAuth2 = google.auth.OAuth2;
 const path = require("path");
-const { getMediaPath } = require("../../utils");
+const { getMediaPath, getCredentialsPath } = require("../../utils");
 
 const CLIENT_IDX = 0;
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/youtube-nodejs-quickstart.json
 var SCOPES = ["https://www.googleapis.com/auth/youtube"];
-var TOKEN_DIR = path.join(__dirname, `../../../credentials/`);
+var TOKEN_DIR = getCredentialsPath();
 var TOKEN_PATH = path.join(TOKEN_DIR, `client_auth_${CLIENT_IDX}.json`);
 // Load client secrets from a local file.
 

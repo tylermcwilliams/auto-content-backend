@@ -15,19 +15,6 @@ function splitIntoChunks(text, size) {
   return chunks;
 }
 
-async function saveImage(outputPath, imageResponse) {
-  const writer = fs.createWriteStream(outputPath);
-  imageResponse.data.pipe(writer);
-
-  return new Promise((resolve, reject) => {
-    writer.on("finish", () => {
-      console.log(`Image saved to ${outputPath}`);
-      resolve(outputPath);
-    });
-    writer.on("error", reject);
-  });
-}
-
 const getAudioDuration = async (audioPath) => {
   try {
     const { stdout } = await execAsync(
@@ -38,29 +25,6 @@ const getAudioDuration = async (audioPath) => {
     console.error("Error getting audio duration:", error);
     return 0;
   }
-};
-
-const getMediaPath = (id) => {
-  const outFolderPath = path.join(__dirname, `../out/`);
-  return path.join(outFolderPath, `${id}`);
-};
-
-const getTempPath = (id) => {
-  const mediaPath = getMediaPath(id);
-  return path.join(mediaPath, `temp`);
-};
-
-const getAssetPath = (id) => {
-  const mediaPath = getMediaPath(id);
-  return path.join(mediaPath, "assets");
-};
-
-const cleanupTmpFolder = (folderPath) => {
-  const files = fs.readdirSync(folderPath);
-  for (const file of files) {
-    fs.unlinkSync(path.join(folderPath, file));
-  }
-  console.log("Temporary files cleaned up.");
 };
 
 const splitTextIntoChunks = (text, chunkSize) => {
@@ -90,13 +54,11 @@ const splitTextIntoChunks = (text, chunkSize) => {
   return chunks;
 };
 
+const fileSystemUtils = require("./fileSystem");
+
 module.exports = {
   splitIntoChunks,
-  saveImage,
   getAudioDuration,
-  getAssetPath,
-  getMediaPath,
-  getTempPath,
   splitTextIntoChunks,
-  cleanupTmpFolder,
+  ...fileSystemUtils,
 };
