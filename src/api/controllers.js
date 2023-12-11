@@ -48,11 +48,14 @@ const getVideo = async (req, res) => {
 // TODO: Paginate results
 const listVideos = async (req, res) => {
   try {
-    console.info("in route");
+    console.info("in route to list");
     const directories = await readdir(DATA_FOLDER);
     const videos = await Promise.all(
       directories.map(async (dir) => {
         const metadataPath = path.join(DATA_FOLDER, dir, "metadata.json");
+        if (!fs.existsSync(metadataPath)) {
+          return null;
+        }
         const metadata = JSON.parse(await readFile(metadataPath, "utf8"));
         return {
           id: dir,
@@ -61,8 +64,9 @@ const listVideos = async (req, res) => {
         };
       })
     );
-
-    res.json(videos);
+    const filteredVideos = videos.filter((video) => video !== null);
+    console.info(filteredVideos.length);
+    res.json(filteredVideos);
   } catch (error) {
     res.status(500).send(error.message);
   }

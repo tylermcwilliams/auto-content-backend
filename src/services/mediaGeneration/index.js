@@ -14,82 +14,97 @@ const {
 } = require("../../utils");
 
 async function gen_reel(strat) {
-  const id = gen_uuid();
-  console.info("Generating reel: ", id);
+  try {
+    const id = gen_uuid();
+    console.info("Generating reel: ", id);
 
-  const temp_path = getTempPath(id);
-  fs.mkdirSync(temp_path, { recursive: true });
-  const asset_path = getAssetPath(id);
-  fs.mkdirSync(asset_path, { recursive: true });
+    const temp_path = getTempPath(id);
+    fs.mkdirSync(temp_path, { recursive: true });
+    const asset_path = getAssetPath(id);
+    fs.mkdirSync(asset_path, { recursive: true });
 
-  const { subject, descriptor, lang } = strat;
-  const data_string = await prep_text(id, subject, descriptor, lang);
-  const data = JSON.parse(data_string);
-  console.info(data);
-  const audio_assets = await prep_audio(id, data.Story);
-  console.info(audio_assets);
-  const image_assets = await prep_images(id, data.Story);
-  console.info(image_assets);
+    const { subject, descriptor, lang } = strat;
+    const data_string = await prep_text(id, subject, descriptor, lang);
+    const data = JSON.parse(data_string);
+    console.info(data);
+    const audio_assets = await prep_audio(id, data.Story);
+    console.info(audio_assets);
+    const image_assets = await prep_images(id, data.Story);
+    console.info(image_assets);
 
-  // PREP METADATA OBJECT
-  data.id = id;
-  data.Images = image_assets;
-  data.Audio = audio_assets;
-  const outputPath = path.join(getMediaPath(id), `metadata.json`);
-  fs.writeFileSync(outputPath, JSON.stringify(data));
+    // PREP METADATA OBJECT
+    data.id = id;
+    data.Images = image_assets;
+    data.Audio = audio_assets;
+    const outputPath = path.join(getMediaPath(id), `metadata.json`);
+    fs.writeFileSync(outputPath, JSON.stringify(data));
 
-  // PRODUCE VIDEO
-  await produceVideo(id);
-  // UPLOAD
-  await upload_to_youtube(id);
+    // PRODUCE VIDEO
+    await produceVideo(id);
+    // UPLOAD
+    await upload_to_youtube(id);
 
-  return {
-    id,
-    data,
-  };
+    return {
+      id,
+      data,
+    };
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
 async function prep_text(id, idea, descriptor, lang) {
-  console.info("Preparing text for story: ", idea);
+  try {
+    console.info("Preparing text for story: ", idea);
 
-  const prompt = get_prompt(idea, descriptor, lang);
-  const story = await gen_text(prompt);
+    const prompt = get_prompt(idea, descriptor, lang);
+    const story = await gen_text(prompt);
 
-  return story;
+    return story;
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
 async function prep_audio(id, Story) {
-  const assets = [];
-  const audio_prompts = Story;
+  try {
+    const assets = [];
+    const audio_prompts = Story;
 
-  console.info("Preparing audio for story: ", id);
-  for (const [index, prompt] of audio_prompts.entries()) {
-    const file = `audio_${index}.mp3`;
-    const buffer = await gen_audio(prompt);
-    const outputPath = path.join(getAssetPath(id), file);
-    await fs_prom.writeFile(outputPath, buffer);
-    assets.push(outputPath);
+    console.info("Preparing audio for story: ", id);
+    for (const [index, prompt] of audio_prompts.entries()) {
+      const file = `audio_${index}.mp3`;
+      const buffer = await gen_audio(prompt);
+      const outputPath = path.join(getAssetPath(id), file);
+      await fs_prom.writeFile(outputPath, buffer);
+      assets.push(outputPath);
+    }
+
+    return assets;
+  } catch (error) {
+    console.error("Error:", error);
   }
-
-  return assets;
 }
-
 async function prep_images(id, Story) {
-  const assets = [];
-  const image_prompts = Story.map((sentence) => {
-    return "Realistic photo style with no text, of " + sentence;
-  });
+  try {
+    const assets = [];
+    const image_prompts = Story.map((sentence) => {
+      return "Realistic photo style with no text, of " + sentence;
+    });
 
-  console.info("Preparing images for story: ", id);
-  for (const [index, prompt] of image_prompts.entries()) {
-    const file = `image_${index}.jpg`;
-    const imageResponse = await gen_image(prompt);
-    const outputPath = path.join(getAssetPath(id), file);
-    await saveImage(outputPath, imageResponse);
-    assets.push(outputPath);
+    console.info("Preparing images for story: ", id);
+    for (const [index, prompt] of image_prompts.entries()) {
+      const file = `image_${index}.jpg`;
+      const imageResponse = await gen_image(prompt);
+      const outputPath = path.join(getAssetPath(id), file);
+      await saveImage(outputPath, imageResponse);
+      assets.push(outputPath);
+    }
+
+    return assets;
+  } catch (error) {
+    console.error("Error:", error);
   }
-
-  return assets;
 }
 
 const get_prompt = (idea, descriptor, lang = "english") => {
