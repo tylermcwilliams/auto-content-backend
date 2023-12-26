@@ -1,16 +1,16 @@
-const { gen_reel } = require("../services/mediaGeneration");
-const { upload_to_youtube } = require("../services/socialMedia");
+const { gen_reel } = require("../../services/mediaGeneration");
+const { upload_to_youtube } = require("../../services/socialMedia");
 const {
   produceVideo,
   generateThumbnail,
-} = require("../services/videoProduction");
-const { reels: reel_templates } = require("../../templates");
+} = require("../../services/videoProduction");
+const { reels: reel_templates } = require("../../../templates");
 const fs = require("fs");
 const path = require("path");
 const { promisify } = require("util");
 const readdir = promisify(fs.readdir);
 const readFile = promisify(fs.readFile);
-const { getMediaDir } = require("../utils/fileSystem");
+const { getMediaDir } = require("../../utils/fileSystem");
 
 const DATA_FOLDER = getMediaDir(); // adjust this path to your data folder
 
