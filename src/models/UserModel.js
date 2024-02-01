@@ -1,23 +1,23 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  sessionToken: {
-    type: String,
-    required: true,
-    unique: true,
-  },
   email: {
     type: String,
     required: true,
     unique: true,
   },
-  firstName: {
+  sessionToken: {
     type: String,
+    required: true,
+    unique: true,
+  },
+  lastLogin: {
+    type: Number,
     required: true,
   },
-  lastName: {
-    type: String,
-    required: true,
+  subscriptionTier: {
+    type: Number,
+    default: 0,
   },
 });
 

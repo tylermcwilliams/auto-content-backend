@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 
-const connectDB = async () => {
+const REMOTE_MONGO_URI = "mongodb://db:27017/auto-content";
+
+const connectDB = async (uri = REMOTE_MONGO_URI) => {
   try {
-    await mongoose.connect("mongodb://db:27017/auto-content", {
+    await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
