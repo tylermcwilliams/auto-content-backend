@@ -21,3 +21,6 @@ sudo docker run --env-file .env -v /home/user/repos/nodejs/auto-content-backend/
 
 # Running
 ```sudo docker run --env-file .env --v ~/repos/nodejs/auto-content-backend:/out/in/container d -p 3000:3000 auto-content-backend```
+
+# Testing
+npm run test
