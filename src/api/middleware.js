@@ -22,7 +22,7 @@ passport.use(
       callbackURL: GOOGLE_CALLBACK_URL,
     },
     (accessToken, refreshToken, profile, done) => {
-      console.log(profile);
+      console.info(profile);
       done(null, profile);
     }
   )

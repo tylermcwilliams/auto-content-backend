@@ -25,7 +25,7 @@ async function upload_to_youtube(id) {
 async function upload(data, videoPath) {
   http: fs.readFile(`yt_api.json`, function processClientSecrets(err, content) {
     if (err) {
-      console.log("Error loading  client secret file: " + err);
+      console.error("Error loading  client secret file: " + err);
       return;
     }
     const { clients } = JSON.parse(content);
@@ -73,7 +73,7 @@ function getNewToken(oauth2Client, callback) {
     access_type: "offline",
     scope: SCOPES,
   });
-  console.log("Authorize this app by visiting this url: ", authUrl);
+  console.info("Authorize this app by visiting this url: ", authUrl);
   var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -82,7 +82,7 @@ function getNewToken(oauth2Client, callback) {
     rl.close();
     oauth2Client.getToken(code, function (err, token) {
       if (err) {
-        console.log("Error while trying to retrieve access token", err);
+        console.error("Error while trying to retrieve access token", err);
         return;
       }
       oauth2Client.credentials = token;
@@ -107,7 +107,6 @@ function storeToken(token) {
   }
   fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
     if (err) throw err;
-    console.log("Token stored to " + TOKEN_PATH);
   });
 }
 
@@ -127,14 +126,14 @@ function getChannel(auth) {
     },
     function (err, response) {
       if (err) {
-        console.log("The API returned an error: " + err);
+        console.error("The API returned an error: " + err);
         return;
       }
       var channels = response.data.items;
       if (channels.length == 0) {
-        console.log("No channel found.");
+        console.error("No channel found.");
       } else {
-        console.log(
+        console.info(
           "This channel's ID is %s. Its title is '%s', and " +
             "it has %s views.",
           channels[0].id,
@@ -168,9 +167,8 @@ function uploadVideo(auth, data, videoPath) {
       },
     },
     function (err, response) {
-      console.info(err, response);
-      if (err) return console.log(err);
-      console.info(response);
+      console.error(err, response);
+      if (err) return console.error(err);
       updateVideo(auth, response.data.id);
     }
   );
@@ -190,7 +188,7 @@ async function updateVideo(auth, id) {
       },
     },
     function (err, response) {
-      console.info(err, response);
+      console.error(err, response);
     }
   );
 }
@@ -206,15 +204,15 @@ function updateChannel(auth) {
     },
     function (err, response) {
       if (err) {
-        console.log("The API returned an error: " + err);
+        console.error("The API returned an error: " + err);
         return;
       }
       var channels = response.data.items;
       if (channels.length == 0) {
-        console.log("No channel found.");
+        console.error("No channel found.");
       } else {
         const channel = channels[0];
-        console.log(`
+        console.info(`
           This channel's ID is ${channel.id}. 
           Its title is '${channel.snippet.title}', 
           Description is '${channel.snippet.description}',
@@ -240,12 +238,10 @@ function updateChannel(auth) {
             resource: updatedChannel,
           },
           function (err, response) {
-            console.log("response", err);
             if (err) {
-              console.log("The API returned an error: " + err);
+              console.error("The API returned an error: " + err);
               return;
             }
-            console.log(response);
           }
         );
       }

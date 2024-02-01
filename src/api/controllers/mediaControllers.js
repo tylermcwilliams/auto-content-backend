@@ -15,7 +15,6 @@ const { getMediaDir } = require("../../utils/fileSystem");
 const DATA_FOLDER = getMediaDir(); // adjust this path to your data folder
 
 const getVideoThumbnail = async (req, res) => {
-  console.info(req.params.id);
   try {
     const dir = req.params.id;
     const pathToThumbnail = path.join(DATA_FOLDER, dir, "thumbnail.jpg");
@@ -31,9 +30,7 @@ const getVideoThumbnail = async (req, res) => {
 };
 
 const getVideo = async (req, res) => {
-  console.info("in route for", req.params.id);
   try {
-    console.info(req.params.id);
     const dir = req.params.id;
     // Set the path to your MP4 file
     const pathToMp4 = path.join(DATA_FOLDER, dir, "output.mp4");
@@ -48,7 +45,6 @@ const getVideo = async (req, res) => {
 // TODO: Paginate results
 const listVideos = async (req, res) => {
   try {
-    console.info("in route to list");
     const directories = await readdir(DATA_FOLDER);
     const videos = await Promise.all(
       directories.map(async (dir) => {
@@ -65,7 +61,6 @@ const listVideos = async (req, res) => {
       })
     );
     const filteredVideos = videos.filter((video) => video !== null);
-    console.info(filteredVideos.length);
     res.json(filteredVideos);
   } catch (error) {
     res.status(500).send(error.message);
@@ -73,10 +68,8 @@ const listVideos = async (req, res) => {
 };
 
 const generateVideo = async (req, res) => {
-  console.info("in route", req.body);
   try {
     const { templateName, subject } = req.body;
-    console.info(templateName);
     const template = reel_templates[templateName || "top3"];
     if (!template) {
       return res.status(404).send("Template not found");

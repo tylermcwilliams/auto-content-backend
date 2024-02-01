@@ -26,7 +26,6 @@ async function gen_image(prompt) {
     n: 1,
     size: "1024x1024",
   });
-  console.log(response);
 
   const imageUrl = response.data[0].url;
 

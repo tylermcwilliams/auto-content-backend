@@ -24,8 +24,6 @@ const createVisualVideo = async (
   text
 ) => {
   try {
-    console.info(`Audio duration: ${duration} seconds`);
-
     const textChunks = splitTextIntoChunks(text, 1);
     const chunkDuration = duration / textChunks.length;
     const tempFiles = [];
@@ -67,8 +65,6 @@ const createIndividualVideo = async (
     await execAsync(
       `ffmpeg -i "${tempPath}/temp_v_${index}.mp4" -i "${audioPath}" -c:v copy -c:a aac -strict experimental "${outputPath}"`
     );
-
-    console.info(`Video created at ${outputPath}`);
   } catch (error) {
     console.error("Error creating video:", error);
   }

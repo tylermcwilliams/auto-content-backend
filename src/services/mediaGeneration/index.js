@@ -26,11 +26,8 @@ async function gen_reel(strat) {
     const { subject, descriptor, lang } = strat;
     const data_string = await prep_text(id, subject, descriptor, lang);
     const data = JSON.parse(data_string);
-    console.info(data);
     const audio_assets = await prep_audio(id, data.Story);
-    console.info(audio_assets);
     const image_assets = await prep_images(id, data.Story);
-    console.info(image_assets);
 
     // PREP METADATA OBJECT
     data.id = id;
