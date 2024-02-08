@@ -6,7 +6,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  sessionToken: {
+  googleId: {
+    type: String,
+    unique: true,
+  },
+  accessToken: {
     type: String,
     required: true,
     unique: true,
